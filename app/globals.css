@@ -615,4 +615,16 @@ pre.rq-prev { max-height: 320px; white-space: pre-wrap; overflow-wrap: anywhere;
   .guides-list .meta { grid-column: 1; grid-row: auto; }
   .guides-group table.t td:first-child { white-space: normal; }
 }
+/* privacy links: the "Local only" note and the sidebar foot lead to /privacy */
+.local a { color: inherit; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 3px; transition: text-decoration-color 150ms ease; }
+.local a:hover { color: var(--text); text-decoration-color: var(--control); }
+.side-link { color: var(--faint); text-decoration: underline; text-decoration-color: var(--control); text-underline-offset: 3px; }
+.side-link:hover { color: var(--text); }
+.doc-foot { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 20px; padding: 14px 12px 6px; font-size: var(--fs-small); }
+.doc-foot a { color: var(--muted); }
+.doc-foot a:hover, .doc-foot a[aria-current="page"] { color: var(--text); }
+.privacy-facts { display: grid; gap: 12px; font-size: var(--fs-small); line-height: 18px; color: var(--muted); }
+.privacy-facts b { display: block; color: var(--text); font-weight: 500; font-size: var(--fs-body); line-height: 20px; }
+.doc { grid-template-rows: var(--top-h) minmax(0, 1fr) auto; }
+@media (max-width: 640px) { .doc-foot { padding: 14px 16px 20px; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0.01ms !important; } }

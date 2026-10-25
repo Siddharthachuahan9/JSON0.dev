@@ -44,7 +44,7 @@ Privacy-first JSON tools for developers. Compare, query, validate JSON, decode J
 - ✅ **No analytics on user input** - We never see what you paste
 - ✅ **No accounts required** - Start using immediately, no signup
 - ✅ **Safe for production data** - Paste sensitive data, API keys, tokens safely
-- ✅ **GDPR/CCPA/HIPAA compliant** - No data collection means compliance by design
+- ✅ **No accounts, cookies, analytics or ads** - Details, and how to check them in your browser: https://json0.dev/privacy
 
 **How sharing works:**
 - Share links encode tool state in URL hash fragments (`#share=...`)

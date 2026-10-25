@@ -21,7 +21,6 @@ I've successfully completed all requested improvements to the JSON Exploration S
 - No data transmission to external servers
 - No localStorage, sessionStorage, cookies, or tracking
 - Safe for sensitive data (PII, medical records, financial, proprietary)
-- GDPR, CCPA, and HIPAA compliant
 
 ### One Acceptable External Dependency
 - **Monaco Editor CDN** (jsDelivr) - Loads editor UI assets only (NOT your JSON data)
@@ -470,7 +469,6 @@ Comprehensive privacy documentation covering:
 - What the CDN sees (browser info, not your data)
 - Third-party libraries audit
 - Network activity breakdown
-- Compliance (GDPR, CCPA, HIPAA)
 - Self-hosting instructions for maximum privacy
 - Safe use cases (PII, medical, financial, proprietary)
 

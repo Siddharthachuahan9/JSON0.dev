@@ -51,7 +51,7 @@ export const SHELL_HTML = String.raw`<svg width="0" height="0" style="position:a
     <span class="m-brand m-only"><svg class="mark" aria-hidden="true"><use href="#i-mark"/></svg><b>json0</b><span class="tool" id="mTool">Diff</span></span>
     <button class="search" id="searchBtn" aria-label="Search tools and actions (Cmd+K)"><svg aria-hidden="true"><use href="#i-search"/></svg><span>Search tools and actions</span><kbd>&#8984;K</kbd></button>
     <div class="top-right">
-      <p class="local" id="localNote"><svg aria-hidden="true"><use href="#i-lock"/></svg>Local only: nothing you paste leaves this browser</p>
+      <p class="local" id="localNote"><svg aria-hidden="true"><use href="#i-lock"/></svg><a href="/privacy" title="How json0 handles your data">Local only: nothing you paste leaves this browser</a></p>
       <button class="icon-btn" id="themeBtn" aria-label="Switch to the dark theme"><svg aria-hidden="true"><use href="#i-moon" id="themeIcon"/></svg><span class="theme-label" id="themeLabel">Dark</span></button>
     </div>
   </header>
@@ -89,6 +89,7 @@ export const SHELL_HTML = String.raw`<svg width="0" height="0" style="position:a
     <p class="group-label">Feedback</p>
     <a class="nav-item" href="/request" data-route="request"><svg aria-hidden="true"><use href="#i-request"/></svg>Request a feature</a>
     <div class="side-foot">
+      <div><a class="side-link" href="/privacy">How json0 handles your data</a></div>
       <div><span>Command palette</span><kbd>&#8984;K</kbd></div>
       <div><span>Hide this panel</span><kbd>&#8984;/</kbd></div>
       <div><span>Run a query</span><kbd>&#8984;&#8629;</kbd></div>
