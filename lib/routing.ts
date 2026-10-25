@@ -197,8 +197,8 @@ export const TOOL_ROUTES: ToolRoute[] = [
     group: 'Network',
     title: 'Ping Tool - Time HTTPS Requests to a Host | json0',
     description:
-      'Check a host or URL and see the HTTPS requests that would time it, since browsers cannot send ICMP pings. This version sends no network requests.',
-    features: ['Host and URL parsing', 'HTTPS timing plan instead of ICMP', 'No network requests'],
+      'Check whether a host answers and how fast: three timed HTTPS requests from your browser, since browsers cannot send ICMP pings. Nothing is sent until you press Ping.',
+    features: ['Three timed HTTPS HEAD requests', 'Reached, timed out or failed per attempt', 'Average round trip', 'Sends nothing until you press Ping'],
   },
   {
     slug: 'request',

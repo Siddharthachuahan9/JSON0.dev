@@ -209,7 +209,7 @@ export const SHELL_HTML = String.raw`<svg width="0" height="0" style="position:a
 
     <!-- ================= Ping ================= -->
     <section class="view" data-view="ping" hidden>
-      <div class="title-row"><div><h1>Ping</h1><p class="sub" id="pingSub"><b>api.northwind-labs.io</b> has not been pinged. Timing it means sending requests from your browser.</p></div></div>
+      <div class="title-row"><div><h1>Ping</h1><p class="sub" id="pingSub"><b>api.northwind-labs.io</b> has not been pinged yet. Press Ping to time 3 HTTPS requests from this browser.</p></div></div>
       <div class="cols">
         <div class="panel">
           <div class="panel-head"><h2>Host</h2></div>
@@ -217,18 +217,19 @@ export const SHELL_HTML = String.raw`<svg width="0" height="0" style="position:a
             <form class="field-row" id="pingForm">
               <label class="vh" for="pingIn">Host or URL</label>
               <input class="input" id="pingIn" style="font-family:var(--mono)" spellcheck="false" value="api.northwind-labs.io">
-              <button class="btn primary" type="submit">Ping</button>
+              <button class="btn primary" type="submit" id="pingBtn">Ping</button>
             </form>
             <dl class="kv" id="pingOut" style="margin-top:16px"></dl>
+            <p class="note" style="margin-top:12px">This tool contacts only the host you enter, and sends nothing else: no cookies, no referrer, nothing you pasted elsewhere in json0.</p>
           </div>
         </div>
         <div class="panel">
-          <div class="panel-head"><h2>Round trips</h2><span class="meta">3 attempts</span></div>
+          <div class="panel-head"><h2>Round trips</h2><span class="meta">3 attempts, 5 s timeout</span></div>
           <div class="panel-body">
             <table class="t"><thead><tr><th>Attempt</th><th>Status</th><th class="n">Time</th></tr></thead>
-              <tbody><tr><td colspan="3" style="border-bottom:0"><div class="offline" id="pingOffline"><b>No requests sent.</b><span>Browsers cannot send ICMP pings, so json0 times HTTPS requests to the host instead. That means contacting the host from your browser; this build makes no network requests, so there are no timings to show.</span></div></td></tr>
-                <tr><td class="num">1</td><td>Not sent</td><td class="n dash">—</td></tr><tr><td class="num">2</td><td>Not sent</td><td class="n dash">—</td></tr><tr><td class="num">3</td><td>Not sent</td><td class="n dash">—</td></tr></tbody>
+              <tbody id="pingRows"><tr><td class="num">1</td><td class="dash">—</td><td class="n dash">—</td></tr><tr><td class="num">2</td><td class="dash">—</td><td class="n dash">—</td></tr><tr><td class="num">3</td><td class="dash">—</td><td class="n dash">—</td></tr></tbody>
             </table>
+            <p class="note" style="margin-top:12px">Browsers cannot send ICMP pings, so this times an HTTPS request from this browser to the host you typed, one second apart. The status code is not readable from a browser, so a reply only proves the host answered.</p>
           </div>
         </div>
       </div>
