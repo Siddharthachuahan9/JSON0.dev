@@ -1,50 +1,30 @@
 {
   "name": "json0-dev",
-  "version": "1.0.0",
-  "description": "Fast, friendly JSON tools. Compare, query, and validate JSON - all in your browser. Privacy-first, no data leaves your device.",
+  "version": "2.0.0",
+  "private": true,
+  "description": "JSON, CSV and MongoDB tools that run in your browser: diff, query, validate, format, tables, schemas, redaction and more. Nothing you paste leaves your device.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx",
-    "type-check": "tsc --noEmit",
-    "test": "vitest",
-    "test:e2e": "playwright test"
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@monaco-editor/react": "^4.6.0",
-    "@tanstack/react-virtual": "^3.10.8",
-    "ajv": "^8.17.1",
-    "clsx": "^2.1.1",
-    "diff": "^5.1.0",
-    "framer-motion": "^11.11.17",
-    "json-diff-kit": "^1.0.34",
-    "json5": "^2.2.3",
-    "jsonpath-plus": "^10.2.0",
-    "monaco-editor": "^0.47.0",
-    "nanoid": "^5.0.9",
-    "next": "^14.2.18",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "zod": "^3.24.1",
-    "zustand": "^5.0.2"
+    "next": "15.5.28",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.49.1",
-    "@testing-library/react": "^16.1.0",
-    "@testing-library/user-event": "^14.5.2",
-    "@types/diff": "^7.0.2",
     "@types/node": "^22.10.2",
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5",
-    "@vitest/ui": "^2.1.8",
-    "autoprefixer": "^10.4.20",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "eslint": "^8.57.1",
-    "eslint-config-next": "^14.2.18",
-    "postcss": "^8.4.49",
+    "eslint-config-next": "15.5.28",
     "prettier": "^3.4.2",
-    "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.2",
-    "vitest": "^2.1.8"
+    "typescript": "^5.7.2"
+  },
+  "overrides": {
+    "postcss": "^8.5.31"
   }
 }
