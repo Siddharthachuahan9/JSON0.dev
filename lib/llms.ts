@@ -1,6 +1,8 @@
 import { getGuides, guideMarkdown } from '@/lib/guides';
 import { SITE_URL, TOOL_ROUTES } from '@/lib/routing';
 
+export const PRIVACY_UPDATED = '2026-10-25';
+
 /** /llms.txt, following the llmstxt.org format: what json0 is, its tools, and its guides as Markdown. */
 export function llmsTxt(): string {
   const tools = TOOL_ROUTES.filter((r) => r.group !== 'Feedback');
@@ -9,6 +11,8 @@ export function llmsTxt(): string {
     '# json0',
     '',
     `> json0 (${SITE_URL}) is a free set of ${tools.length} JSON, CSV and MongoDB tools that run entirely in the browser: diff, query, validate, format, tables, schema inference, redaction, Extended JSON, ObjectIds, encoders and more. Nothing pasted into a tool is uploaded; the only tool that makes a network request is Ping, and only to the host the user enters.`,
+    '',
+    `Privacy, in detail: ${SITE_URL}/privacy. In short: no accounts, cookies, analytics or ads; fonts are self-hosted; the host (Vercel) keeps standard request logs, which contain page addresses, not pasted data.`,
     '',
     'Every tool has its own URL and works without an account. Share links for JSON Diff keep both documents in the URL fragment, which browsers do not send to servers. The source is on GitHub: https://github.com/Siddharthachuahan9/JSON0.dev',
     '',
@@ -22,6 +26,7 @@ export function llmsTxt(): string {
     '',
     '## Optional',
     '',
+    `- [Privacy](${SITE_URL}/privacy): exactly what json0 does and does not send, and how to check it in the browser's network panel.`,
     `- [All guides in one file](${SITE_URL}/llms-full.txt): the full Markdown of every guide.`,
     `- [Request a feature](${SITE_URL}/request): ask for a tool or report a bug, by GitHub issue or email.`,
     '',

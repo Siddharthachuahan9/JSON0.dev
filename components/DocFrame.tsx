@@ -4,7 +4,7 @@
  * script, so they open with a full page load.
  */
 /* eslint-disable @next/next/no-html-link-for-pages */
-export function DocFrame({ current, children }: { current: 'guides' | 'none'; children: React.ReactNode }) {
+export function DocFrame({ current, children }: { current: 'guides' | 'privacy' | 'none'; children: React.ReactNode }) {
   return (
     <div className="doc">
       <header className="doc-top">
@@ -22,6 +22,12 @@ export function DocFrame({ current, children }: { current: 'guides' | 'none'; ch
         </nav>
       </header>
       <main className="doc-sheet">{children}</main>
+      <footer className="doc-foot">
+        <a href="/privacy" aria-current={current === 'privacy' ? 'page' : undefined}>Privacy</a>
+        <a href="/guides">Guides</a>
+        <a href="/llms.txt">llms.txt</a>
+        <a href="https://github.com/Siddharthachuahan9/JSON0.dev">Source on GitHub</a>
+      </footer>
     </div>
   );
 }

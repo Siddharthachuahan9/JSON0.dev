@@ -15,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly' as const,
       priority: r.group === 'Feedback' ? 0.4 : r.group === 'JSON' ? 0.9 : 0.8,
     })),
+    { url: `${SITE_URL}/privacy`, lastModified: UPDATED, changeFrequency: 'yearly', priority: 0.5 },
     { url: `${SITE_URL}/guides`, lastModified: UPDATED, changeFrequency: 'weekly', priority: 0.8 },
     ...getGuides().map((g) => ({ url: guideUrl(g), lastModified: g.date, changeFrequency: 'monthly' as const, priority: 0.7 })),
   ];
