@@ -2590,6 +2590,7 @@ const ACTIONS = [
   { label: 'Open a file as Before', hint: 'Diff', icon: 'i-upload', run: () => { go('json-diff'); $('[data-open="A"]').click(); } },
   { label: 'Toggle ignore array order', hint: 'Diff', icon: 'i-diff', run: () => { go('json-diff'); $('#optOrder').click(); } },
   { label: 'Load the subscription sample', hint: 'Diff', icon: 'i-diff', run: () => { go('json-diff'); loadSample(); } },
+  { label: 'Guides', hint: 'Learn', icon: 'i-book', run: () => { location.href = '/guides'; } },
   { label: 'Switch theme', hint: 'View', icon: 'i-moon', run: () => $('#themeBtn').click() },
   { label: 'Hide or show the tool panel', hint: 'View', icon: 'i-menu', run: () => app.classList.toggle('nav-hidden') }
 ];
