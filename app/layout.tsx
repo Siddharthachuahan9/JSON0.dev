@@ -1,46 +1,55 @@
-import type { Metadata } from 'next';
-import { ThemeProvider } from '@/components/shell/ThemeProvider';
+import type { Metadata, Viewport } from 'next';
+import { IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google';
+import { SITE_URL } from '@/lib/routing';
 import './globals.css';
 
+const plexSans = IBM_Plex_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  display: 'swap',
+  adjustFontFallback: false, // fall back to the prototype's own stack (system UI), not a metric-adjusted Arial
+  variable: '--font-plex-sans',
+  fallback: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+});
+const plexMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  display: 'swap',
+  adjustFontFallback: false, // fall back to the prototype's own stack (system UI), not a metric-adjusted Arial
+  variable: '--font-plex-mono',
+  fallback: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
+});
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'json0 - JSON Tools Online',
-  description: 'Fast, friendly JSON tools. Compare, query, and validate JSON - all in your browser. Privacy-first, no data leaves your device.',
-  viewport: 'width=device-width, initial-scale=1',
+  description:
+    'JSON, CSV and MongoDB tools that run in your browser: diff, query, validate, format, tables, schemas, redaction and more. Nothing you paste leaves your device.',
+  applicationName: 'json0',
+  icons: { icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }], apple: '/apple-touch-icon.png.svg' },
+  manifest: '/site.webmanifest',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f2f6f4' },
+    { media: '(prefers-color-scheme: dark)', color: '#0b0c0c' },
+  ],
+};
+
+/* Applies the saved theme before first paint, so a dark-theme visitor never sees a light flash. */
+const THEME_INIT = `try{if(localStorage.getItem('json0-theme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}`;
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="light" className={`${plexSans.variable} ${plexMono.variable}`} suppressHydrationWarning>
       <head>
-        {/* Favicon and App Icons */}
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png.svg" />
-        <link rel="manifest" href="/site.webmanifest" />
-
-        {/* Theme Color */}
-        <meta name="theme-color" content="#3B82F6" />
-        <meta name="msapplication-TileColor" content="#3B82F6" />
-
-        {/* Inter Font - Google Fonts */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-
-        {/* Preload critical fonts */}
-        <link
-          rel="preload"
-          href="/fonts/jetbrains-mono/JetBrainsMono-Variable.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
       </head>
-      <body>
-        <ThemeProvider>{children}</ThemeProvider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

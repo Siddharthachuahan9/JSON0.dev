@@ -1,11 +1,11 @@
 {
   "name": "json0 - JSON Tools Online",
   "short_name": "json0",
-  "description": "Fast, friendly JSON tools. Compare, query, and validate JSON - all in your browser. Privacy-first, no data leaves your device.",
+  "description": "JSON, CSV and MongoDB tools that run in your browser. Nothing you paste leaves your device.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0f1a",
-  "theme_color": "#10b981",
+  "background_color": "#f2f6f4",
+  "theme_color": "#f2f6f4",
   "orientation": "portrait-primary",
   "icons": [
     {
