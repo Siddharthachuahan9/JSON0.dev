@@ -15,6 +15,9 @@ const ORDER = [
   'json-diff-tools-compared',
   'mongodb-json-tools-compared',
   'redact-secrets-before-sharing-json',
+  'json0-vs-jsonlint',
+  'json0-vs-json-formatter-sites',
+  'json0-vs-jwt-io',
   'compare-json-ignore-array-order',
   'json-to-csv-nested-objects',
   'json-schema-typescript-zod-from-json',
@@ -46,22 +49,10 @@ const DIR = path.join(process.cwd(), 'content', 'guides');
 const slugify = (s: string) =>
   s.toLowerCase().replace(/<[^>]+>/g, '').replace(/&[a-z]+;/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-function parse(slug: string): Guide {
-  const raw = fs.readFileSync(path.join(DIR, `${slug}.md`), 'utf8');
-  const m = /^---\n([\s\S]*?)\n---\n+([\s\S]*)$/.exec(raw);
-  if (!m) throw new Error(`content/guides/${slug}.md has no front matter`);
-  const meta: Record<string, string> = {};
-  for (const line of m[1].split('\n')) {
-    const i = line.indexOf(': ');
-    if (i > 0) meta[line.slice(0, i).trim()] = line.slice(i + 2).trim();
-  }
-  for (const k of ['title', 'description', 'date', 'kind', 'tool']) {
-    if (!meta[k]) throw new Error(`content/guides/${slug}.md is missing "${k}"`);
-  }
-  if (!getRoute(meta.tool)) throw new Error(`content/guides/${slug}.md names an unknown tool "${meta.tool}"`);
-
-  const markdown = m[2].trim() + '\n';
-  const headings: Guide['headings'] = [];
+/** Markdown to HTML for reading pages: h2/h3 get ids (h2s are collected for "On this page"), external
+ * links get rel="noopener", and tables sit in a box that scrolls sideways on a phone. */
+export function renderMarkdown(markdown: string): { html: string; headings: { id: string; html: string }[] } {
+  const headings: { id: string; html: string }[] = [];
   const md = new Marked({
     gfm: true,
     renderer: {
@@ -78,8 +69,28 @@ function parse(slug: string): Guide {
       },
     },
   });
-  // tables scroll sideways inside their own box on a phone, never the page
-  const html = (md.parse(markdown) as string).replace(/<table>/g, '<div class="guide-table"><table>').replace(/<\/table>/g, '</table></div>');
+  const html = (md.parse(markdown) as string)
+    .replace(/<table>/g, '<div class="guide-table"><table>')
+    .replace(/<\/table>/g, '</table></div>');
+  return { html, headings };
+}
+
+function parse(slug: string): Guide {
+  const raw = fs.readFileSync(path.join(DIR, `${slug}.md`), 'utf8');
+  const m = /^---\n([\s\S]*?)\n---\n+([\s\S]*)$/.exec(raw);
+  if (!m) throw new Error(`content/guides/${slug}.md has no front matter`);
+  const meta: Record<string, string> = {};
+  for (const line of m[1].split('\n')) {
+    const i = line.indexOf(': ');
+    if (i > 0) meta[line.slice(0, i).trim()] = line.slice(i + 2).trim();
+  }
+  for (const k of ['title', 'description', 'date', 'kind', 'tool']) {
+    if (!meta[k]) throw new Error(`content/guides/${slug}.md is missing "${k}"`);
+  }
+  if (!getRoute(meta.tool)) throw new Error(`content/guides/${slug}.md names an unknown tool "${meta.tool}"`);
+
+  const markdown = m[2].trim() + '\n';
+  const { html, headings } = renderMarkdown(markdown);
   const words = markdown.split(/\s+/).filter(Boolean).length;
   return {
     slug,
