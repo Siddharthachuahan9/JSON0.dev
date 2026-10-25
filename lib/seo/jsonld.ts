@@ -1,169 +1,59 @@
 /**
- * JSON-LD Structured Data Generation
- * Provides rich search results for Google and other search engines
+ * JSON-LD structured data for search results.
  */
 
-import { Tool } from '@/components/shell/ToolNavigation';
+import { SITE_URL, TOOL_ROUTES, type ToolRoute } from '@/lib/routing';
 
-/**
- * Generate WebApplication JSON-LD structured data
- */
+const CREATOR = { '@type': 'Person', name: 'Siddharthachuahan9', url: 'https://sidstack.in' };
+
 export function generateWebApplicationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
     name: 'json0',
     alternateName: 'json0.dev',
-    url: 'https://json0.dev',
+    url: SITE_URL,
     description:
-      'Fast, friendly JSON tools. Compare, query, and validate JSON - all in your browser. Privacy-first, no data leaves your device.',
+      'JSON, CSV and MongoDB tools that run in your browser: diff, query, validate, format, tables, schemas, redaction and more. Nothing you paste leaves your device.',
     applicationCategory: 'DeveloperApplication',
     operatingSystem: 'Any',
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-    },
-    creator: {
-      '@type': 'Person',
-      name: 'Siddharthachuahan9',
-    },
-    featureList: [
-      'JSON Diff',
-      'JSON Validation',
-      'JSONPath Query',
-      'JWT Decoder',
-      'Base64 Encoder/Decoder',
-      'Hash Generator (SHA)',
-      'UUID Generator',
-      'IP Inspector',
-      'Ping Tool',
-      'XML to JSON Converter',
-    ],
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    creator: CREATOR,
+    featureList: TOOL_ROUTES.filter((r) => r.group !== 'Feedback').map((r) => r.name),
     browserRequirements: 'Requires JavaScript. Requires HTML5.',
-    softwareVersion: '1.0',
+    softwareVersion: '2.0',
   };
 }
 
-/**
- * Generate SoftwareApplication JSON-LD for specific tool
- */
-export function generateToolSchema(tool: Tool, title: string, description: string) {
-  const toolNames: Record<Tool, string> = {
-    diff: 'JSON Diff',
-    validate: 'JSON Validator',
-    jsonpath: 'JSONPath Query',
-    jwt: 'JWT Decoder',
-    base64: 'Base64 Encoder/Decoder',
-    ping: 'Ping Tool',
-    ip: 'IP Inspector',
-    hash: 'Hash Generator',
-    uuid: 'UUID Generator',
-    'xml-to-json': 'XML to JSON Converter',
-  };
-
+export function generateToolSchema(route: ToolRoute) {
   return {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: toolNames[tool],
-    applicationCategory: 'DeveloperTool',
+    name: route.name,
+    applicationCategory: 'DeveloperApplication',
     operatingSystem: 'Any',
-    url: `https://json0.dev/${tool}`,
-    description: description,
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-    },
+    url: `${SITE_URL}/${route.slug}`,
+    description: route.description,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
     browserRequirements: 'Requires JavaScript. Requires HTML5.',
-    creator: {
-      '@type': 'Person',
-      name: 'Siddharthachuahan9',
-    },
+    creator: CREATOR,
     inLanguage: 'en-US',
-    featureList: getToolFeatures(tool),
+    featureList: route.features,
   };
 }
 
-/**
- * Get feature list for specific tool
- */
-function getToolFeatures(tool: Tool): string[] {
-  const features: Record<Tool, string[]> = {
-    diff: [
-      'Compare two JSON documents',
-      'Visual diff highlighting',
-      'Syntax highlighting',
-      'Privacy-first local processing',
-    ],
-    validate: [
-      'JSON syntax validation',
-      'Error detection',
-      'Line number references',
-      'Privacy-first local processing',
-    ],
-    jsonpath: [
-      'JSONPath expression query',
-      'Extract data from JSON',
-      'Syntax highlighting',
-      'Privacy-first local processing',
-    ],
-    jwt: [
-      'Decode JWT tokens',
-      'View header and payload',
-      'Signature verification',
-      'Privacy-first local processing',
-    ],
-    base64: [
-      'Encode to Base64',
-      'Decode from Base64',
-      'Text and file support',
-      'Privacy-first local processing',
-    ],
-    ping: ['Ping any URL', 'Check network connectivity', 'Response time measurement'],
-    ip: ['IP address lookup', 'Geolocation info', 'ISP details'],
-    hash: [
-      'SHA-1, SHA-256, SHA-384, SHA-512',
-      'Cryptographic hash generation',
-      'Privacy-first local processing',
-    ],
-    uuid: [
-      'UUID v4 generation',
-      'Bulk generation support',
-      'Multiple formats',
-      'Privacy-first local processing',
-    ],
-    'xml-to-json': [
-      'Convert XML to JSON',
-      'DOMParser-based conversion',
-      'File upload support',
-      'Privacy-first local processing',
-    ],
-  };
-
-  return features[tool] || [];
-}
-
-/**
- * Generate BreadcrumbList JSON-LD
- */
-export function generateBreadcrumbSchema(tool: Tool, toolName: string) {
+export function generateBreadcrumbSchema(route: ToolRoute) {
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      {
-        '@type': 'ListItem',
-        position: 1,
-        name: 'Home',
-        item: 'https://json0.dev',
-      },
-      {
-        '@type': 'ListItem',
-        position: 2,
-        name: toolName,
-        item: `https://json0.dev/${tool}`,
-      },
+      { '@type': 'ListItem', position: 1, name: 'json0', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: route.name, item: `${SITE_URL}/${route.slug}` },
     ],
   };
+}
+
+/** Serialises JSON-LD for a <script> tag; "<" is escaped so the data cannot close the tag. */
+export function jsonLd(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, '\\u003c');
 }

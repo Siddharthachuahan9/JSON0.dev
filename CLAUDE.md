@@ -28,17 +28,16 @@ This is json0.dev - a full-stack JSON tools application built with modern web te
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 - `npm run start` - Start production server
-- `npm test` - Run tests
 - `npm run type-check` - TypeScript type checking
 - `npm run lint` - ESLint checking
 
 ## Tech Stack
-- **Framework**: Next.js 14 (App Router) + TypeScript
-- **Editor**: Monaco (VS Code engine)
-- **Diff**: json-diff-kit
-- **JSONPath**: jsonpath-plus
-- **State**: Zustand
-- **Styling**: CSS Modules + CSS Variables
+- **Framework**: Next.js 15 (App Router, static generation) + React 19 + TypeScript
+- **UI**: the framed-sheet design, one server-rendered shell (`lib/shell/markup.ts`) with a view per tool
+- **Behaviour**: one plain script, `public/json0.js`, loaded with next/script; no client dependencies
+- **Routing**: a real path per tool (`lib/routing.ts`); the script switches views with history.pushState
+- **Styling**: `app/globals.css` with CSS variables, light and dark themes
+- **Fonts**: IBM Plex Sans and IBM Plex Mono via next/font
 
 ## Important Notes
 - All commits should be authored by Siddharthachuahan9 only
