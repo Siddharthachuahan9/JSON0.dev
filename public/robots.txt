@@ -1,10 +1,9 @@
-# json0.dev - Robots.txt
-# Privacy-first JSON tools
+# json0.dev - JSON, CSV and MongoDB tools that run in the browser
+# Every guide is also available as Markdown at /guides/<slug>.md,
+# and /llms.txt lists the tools and guides for language models.
 
 User-agent: *
 Allow: /
+Disallow: /guides-md/
 
-# Sitemap
 Sitemap: https://json0.dev/sitemap.xml
-
-# Disallow bot-specific paths if any (none for now)

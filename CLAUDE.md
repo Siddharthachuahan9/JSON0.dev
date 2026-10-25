@@ -38,6 +38,7 @@ This is json0.dev - a full-stack JSON tools application built with modern web te
 - **Routing**: a real path per tool (`lib/routing.ts`); the script switches views with history.pushState
 - **Styling**: `app/globals.css` with CSS variables, light and dark themes
 - **Fonts**: IBM Plex Sans and IBM Plex Mono via next/font
+- **Guides**: Markdown in `content/guides` (front matter: title, headline, description, date, kind, tool), rendered at `/guides/<slug>`, served raw at `/guides/<slug>.md`, and listed in `/llms.txt` and `/llms-full.txt`. Add new files to `ORDER` in `lib/guides.ts`
 
 ## Important Notes
 - All commits should be authored by Siddharthachuahan9 only

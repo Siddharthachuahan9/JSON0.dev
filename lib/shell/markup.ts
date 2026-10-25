@@ -39,6 +39,7 @@ export const SHELL_HTML = String.raw`<svg width="0" height="0" style="position:a
     <symbol id="i-plus" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
     <symbol id="i-alert" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><path d="M8 4.8v3.6M8 11h0"/></g></symbol>
     <symbol id="i-request" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2.5h10a1 1 0 0 1 1 1V10a1 1 0 0 1-1 1H7.5l-3.5 2.5V11H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1Z"/><path d="M8 4.5v4M6 6.5h4"/></g></symbol>
+    <symbol id="i-book" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 3.5c1.8-.6 3.7-.4 5.5.8 1.8-1.2 3.7-1.4 5.5-.8v9c-1.8-.6-3.7-.4-5.5.8-1.8-1.2-3.7-1.4-5.5-.8v-9Z"/><path d="M8 4.3v9"/></g></symbol>
   </defs>
 </svg>
 
@@ -83,6 +84,8 @@ export const SHELL_HTML = String.raw`<svg width="0" height="0" style="position:a
     <p class="group-label">Network</p>
     <a class="nav-item" href="/ip" data-route="ip"><svg aria-hidden="true"><use href="#i-ip"/></svg>IP</a>
     <a class="nav-item" href="/ping" data-route="ping"><svg aria-hidden="true"><use href="#i-ping"/></svg>Ping</a>
+    <p class="group-label">Learn</p>
+    <a class="nav-item" href="/guides"><svg aria-hidden="true"><use href="#i-book"/></svg>Guides</a>
     <p class="group-label">Feedback</p>
     <a class="nav-item" href="/request" data-route="request"><svg aria-hidden="true"><use href="#i-request"/></svg>Request a feature</a>
     <div class="side-foot">
