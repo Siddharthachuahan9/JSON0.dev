@@ -645,17 +645,80 @@ function showIP() {
 $('#ipIn').addEventListener('input', showIP);
 $('#ipLookup').onclick = () => { $('#ipOffline').querySelector('b').textContent = 'Not looked up: this build is offline by design.'; say('Lookup not sent: it needs the network'); };
 
-/* ---------------- Ping (no requests in this build) ---------------- */
-function showPing() {
-  const v = $('#pingIn').value.trim(), out = $('#pingOut');
-  let host = v;
+/* ---------------- Ping: times HTTPS requests to the host, only when asked ---------------- */
+/* Browsers cannot send ICMP, so this times a HEAD request from this browser to https://<host>/, the way the
+   old json0 Ping did: no-cors, no cache, no cookies, no referrer, a 5 s timeout. With no-cors the status code
+   cannot be read, so a reply only proves the host answered. Nothing is sent until the Ping button is pressed. */
+const PING = { run: 0, ctrl: null, busy: false, host: '', results: [], silent: -1 };
+const PING_TRIES = 3, PING_TIMEOUT = 5000, PING_GAP = 1000;
+function pingHostOf(v) {
+  let host = '';
   try { host = new URL(/^[a-z]+:\/\//i.test(v) ? v : 'https://' + v).hostname; } catch (e) { host = ''; }
-  const ok = host && /^(?=.{1,253}$)([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)(\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)*$/i.test(host);
-  out.innerHTML = ok ? '<dt>Host</dt><dd><code>' + esc(host) + '</code></dd><dt>Would request</dt><dd><code>https://' + esc(host) + '/</code></dd><dt>Method</dt><dd>HEAD, 3 times, no cache</dd>' : '<dt>Host</dt><dd style="color:var(--negative)">Not a valid host name or URL.</dd>';
-  $('#pingSub').innerHTML = ok ? '<b>' + esc(host) + '</b> has not been pinged. Timing it means sending requests from your browser.' : 'Type a host name or URL.';
+  return host && /^(?=.{1,253}$)([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)(\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)*$/i.test(host) ? host : '';
 }
-$('#pingIn').addEventListener('input', showPing);
-$('#pingForm').onsubmit = e => { e.preventDefault(); showPing(); $('#pingOffline').querySelector('b').textContent = 'Not sent: this build makes no network requests.'; say('Ping not sent: it needs the network'); };
+const PING_LABEL = { ok: 'Reached', timeout: 'Timed out', fail: 'Failed', stopped: 'Stopped', wait: 'Sending…' };
+function drawPingRows() {
+  const rows = [];
+  for (let i = 0; i < PING_TRIES; i++) {
+    const r = PING.results[i];
+    const st = r ? PING_LABEL[r.s] : '—', cls = !r ? ' class="dash"' : r.s === 'fail' || r.s === 'timeout' ? ' style="color:var(--negative)"' : '';
+    const ms = r && r.ms != null ? r.ms.toLocaleString('en-US') + ' ms' : '—';
+    rows.push('<tr><td class="num">' + (i + 1) + '</td><td' + cls + '>' + st + '</td><td class="n num' + (r && r.ms != null ? '' : ' dash') + '">' + ms + '</td></tr>');
+  }
+  $('#pingRows').innerHTML = rows.join('');
+}
+function showPing() {
+  const v = $('#pingIn').value.trim(), out = $('#pingOut'), host = pingHostOf(v);
+  out.innerHTML = host ? '<dt>Host</dt><dd><code>' + esc(host) + '</code></dd><dt>Requests</dt><dd><code>https://' + esc(host) + '/</code></dd><dt>Method</dt><dd>HEAD, 3 times, no cache, 5 s timeout</dd>' : '<dt>Host</dt><dd style="color:var(--negative)">Not a valid host name or URL.</dd>';
+  $('#pingSub').innerHTML = host ? '<b>' + esc(host) + '</b> has not been pinged yet. Press Ping to time 3 HTTPS requests from this browser.' : 'Type a host name or URL.';
+}
+function pingFetch(url) {
+  const ctrl = new AbortController(); PING.ctrl = ctrl;
+  let timedOut = false;
+  const timer = setTimeout(() => { timedOut = true; ctrl.abort(); }, PING_TIMEOUT);
+  const t0 = performance.now();
+  return fetch(url, { method: 'HEAD', mode: 'no-cors', cache: 'no-store', credentials: 'omit', referrerPolicy: 'no-referrer', redirect: 'follow', signal: ctrl.signal })
+    .then(() => ({ s: 'ok', ms: Math.round(performance.now() - t0) }))
+    .catch(() => ({ s: timedOut ? 'timeout' : ctrl.signal.aborted ? 'stopped' : 'fail', ms: null }))
+    .finally(() => clearTimeout(timer));
+}
+function pingFinding(host, stopped) {
+  const done = PING.results.filter(r => r.s !== 'stopped' && r.s !== 'wait'), ok = done.filter(r => r.s === 'ok');
+  const avg = ok.length ? Math.round(ok.reduce((a, r) => a + r.ms, 0) / ok.length) : 0;
+  const tail = stopped ? ' Stopped after ' + plural(done.length, 'attempt') + '.' : '';
+  if (!done.length) return '<b>' + esc(host) + '</b>: stopped before any attempt finished.';
+  if (ok.length) return '<b>' + esc(host) + ' answered ' + ok.length + ' of ' + done.length + '</b>, average ' + avg.toLocaleString('en-US') + ' ms over HTTPS from this browser.' + tail;
+  const t = done.filter(r => r.s === 'timeout').length;
+  return '<b>' + esc(host) + ' did not answer</b>: ' + (t ? t + ' timed out after 5 s' + (done.length - t ? ', ' + (done.length - t) + ' failed' : '') : done.length + ' failed') + '. It may be down, not serving HTTPS, or unreachable from this network.' + tail;
+}
+async function runPing() {
+  const host = pingHostOf($('#pingIn').value.trim());
+  if (!host) { showPing(); $('#pingIn').focus(); say('Type a valid host name or URL first'); return; }
+  if (navigator.onLine === false) { $('#pingSub').innerHTML = '<b>This browser is offline</b>, so nothing was sent to ' + esc(host) + '.'; say('Offline: nothing sent'); return; }
+  const id = ++PING.run; PING.busy = true; PING.host = host; PING.results = [];
+  $('#pingBtn').textContent = 'Stop'; drawPingRows();
+  $('#pingSub').innerHTML = 'Pinging <b>' + esc(host) + '</b>…';
+  for (let i = 0; i < PING_TRIES && id === PING.run; i++) {
+    if (i) { await new Promise(r => setTimeout(r, PING_GAP)); if (PING.silent === id) return; if (id !== PING.run) break; }
+    PING.results[i] = { s: 'wait', ms: null }; drawPingRows();
+    const r = await pingFetch('https://' + host + '/');
+    if (PING.silent === id) return;
+    if (id !== PING.run && r.s !== 'stopped') break;
+    PING.results[i] = r; drawPingRows();
+    if (r.s === 'stopped') break;
+  }
+  const stopped = PING.results.some(r => r.s === 'stopped') || PING.results.length < PING_TRIES;
+  PING.results = PING.results.filter(r => r.s !== 'wait'); drawPingRows();
+  if (id === PING.run || stopped) {
+    PING.busy = false; $('#pingBtn').textContent = 'Run again';
+    $('#pingSub').innerHTML = pingFinding(host, stopped);
+    say($('#pingSub').textContent);
+  }
+}
+function stopPing(silent) { if (silent) PING.silent = PING.run; PING.run++; PING.busy = false; if (PING.ctrl) PING.ctrl.abort(); }
+$('#pingIn').addEventListener('input', () => { if (PING.busy) stopPing(true); PING.results = []; drawPingRows(); $('#pingBtn').textContent = 'Ping'; showPing(); });
+$('#pingForm').onsubmit = e => { e.preventDefault(); if (PING.busy) stopPing(); else runPing(); };
+drawPingRows();
 
 /* ---------------- Base64 ---------------- */
 const b64 = { lock: false };
