@@ -22,6 +22,7 @@ const plexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  verification: { google: "2R2vOG0fDhmBtDQxU7lnOjiVscWTQYzAc1kVRMVyAyI" },
   title: 'json0 - JSON Tools Online',
   description:
     'JSON, CSV and MongoDB tools that run in your browser: diff, query, validate, format, tables, schemas, redaction and more. Nothing you paste leaves your device.',
